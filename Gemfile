@@ -30,9 +30,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development do
+group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
+  gem 'capybara'
 
   # Call 'debugger' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -46,7 +47,6 @@ end
 
 group :test do
   gem 'selenium-webdriver'
-  gem 'capybara'
 end
 
 group :production do
