@@ -34,6 +34,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'guard-rspec'
 
   # Call 'debugger' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
