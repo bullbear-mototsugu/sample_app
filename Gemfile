@@ -7,6 +7,8 @@ gem 'bootstrap-sass', '2.3.2.0'
 # gem 'sprockets', '2.11.0'
 gem 'sprockets'
 
+gem 'bcrypt-ruby'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.0.beta1'
 # Use Uglifier as compressor for JavaScript assets
