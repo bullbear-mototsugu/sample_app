@@ -16,11 +16,15 @@ RSpec.describe User, :type => :model do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
 
+
+  it { should respond_to(:remember_token) }
+
   # @user.valid? の結果をテストしているのと同じ。subject { @user }があるので@userを使う必要が無い。
   it { should be_valid }
 
   # has_secure_passwordを使って認証機能が付いているかどうか
   it { should respond_to(:authenticate) }
+
 
   describe "when name is not present" do
     before { @user.name = " " }
@@ -116,5 +120,12 @@ RSpec.describe User, :type => :model do
   describe "with a password that's too short" do
     before { @user.password = @user.password_confirmation = "a" * 5 }
     it { should be_invalid }
+  end
+
+
+  # emember_tokenをコールバックで保存することを確認するテスト
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
 end

@@ -14,6 +14,8 @@ class UsersController < ApplicationController
     # @user = User.new(params[:user])    # 実装は終わっていないことに注意!
     @user = User.new(user_params)
     if @user.save
+      # ログイン
+      sign_in @user
       # 特殊な変数flash
       flash[:success] = "Welcome to the Sample App!"
       # user_urlへリダイレクトと同様

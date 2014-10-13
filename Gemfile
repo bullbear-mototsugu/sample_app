@@ -39,6 +39,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
+  gem 'rspec-its'
   gem 'capybara'
   gem 'guard-rspec'
 
@@ -55,6 +56,10 @@ end
 group :test do
   gem 'selenium-webdriver'
   gem 'factory_girl_rails'
+
+  gem 'cucumber-rails', '1.4.0', :require => false
+  gem 'database_cleaner', github: 'bmabey/database_cleaner'
+
 end
 
 group :production do
