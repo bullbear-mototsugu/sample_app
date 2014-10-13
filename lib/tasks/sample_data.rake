@@ -23,6 +23,15 @@ namespace :db do
                    password: password,
                    password_confirmation: password)
     end
+
+
+    # 最初の6人だけ50回つぶやいているデータ
+    # users = User.all(limit: 6)
+    users = User.all.limit(6)
+    50.times do
+      content = Faker::Lorem.sentence(5)
+      users.each { |user| user.microposts.create!(content: content) }
+    end
   end
 end
 

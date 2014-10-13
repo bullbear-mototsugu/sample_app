@@ -4,7 +4,7 @@ FactoryGirl.define do
     # email    "michael@example.com"
     # password "foobar"
     # password_confirmation "foobar"
-    
+
     # ブロック変数nはインクリメントされる
     sequence(:name)  { |n| "Person #{n}" }
     sequence(:email) { |n| "person_#{n}@example.com"}
@@ -16,5 +16,11 @@ FactoryGirl.define do
     factory :admin do
       admin true
     end
+  end
+
+
+  factory :micropost do
+    content "Lorem ipsum"
+    user
   end
 end

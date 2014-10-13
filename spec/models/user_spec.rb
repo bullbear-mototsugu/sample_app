@@ -28,6 +28,10 @@ RSpec.describe User, :type => :model do
   # adminのテスト
   it { should respond_to(:admin) }
 
+  # 関連づけのテスト
+  it { should respond_to(:microposts) }
+  it { should respond_to(:feed) }
+
   it { should be_valid }
   it { should_not be_admin }
   describe "with admin attribute set to 'true'" do
@@ -140,5 +144,48 @@ RSpec.describe User, :type => :model do
   describe "remember token" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+
+  describe "micropost associations" do
+
+    before { @user.save }
+    # letはその変数が参照されたときに初めてつくられる（遅延）
+    # let!は即座に変数を作る
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+
+    it "should have the right microposts in the right order" do
+      expect(@user.microposts.to_a).to eq [newer_micropost, older_micropost]
+    end
+
+    # アソシエーション削除テスト
+    it "should destroy associated microposts" do
+      microposts = @user.microposts.to_a
+      @user.destroy
+      # to_aで返すのはオブジェクトのコピー。なのでmicropostは削除されないこと
+      # 次のループで使う
+      expect(microposts).not_to be_empty
+
+      # userにひもづくmicropostsは削除されていること
+      microposts.each do |micropost|
+        expect(Micropost.where(id: micropost.id)).to be_empty
+      end
+    end
+
+    describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_post) }
+    end
+
   end
 end

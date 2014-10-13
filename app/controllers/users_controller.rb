@@ -18,6 +18,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
@@ -71,16 +72,17 @@ class UsersController < ApplicationController
 
     # Before actions
 
-    def signed_in_user
-      # session_helperのsigned_in?メソッド
-      # redirect_to signin_url, notice: "Please sign in." unless signed_in?
+    # micropostsコントローラでも使うので、SessionHelperへ移動
+    # def signed_in_user
+      # # session_helperのsigned_in?メソッド
+      # # redirect_to signin_url, notice: "Please sign in." unless signed_in?
 
-      # ログインしてなければいったんセッションにアクセスしたいURLを保存してログイン画面へ遷移
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in."
-      end
-    end
+      # # ログインしてなければいったんセッションにアクセスしたいURLを保存してログイン画面へ遷移
+      # unless signed_in?
+        # store_location
+        # redirect_to signin_url, notice: "Please sign in."
+      # end
+    # end
 
     # 更新対象のユーザはログイン中のユーザであるかのチェック
     def correct_user
