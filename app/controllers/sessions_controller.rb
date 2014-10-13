@@ -9,7 +9,8 @@ class SessionsController < ApplicationController
       # ユーザーをサインインさせ、ユーザーページ (show) にリダイレクトする。
       # sign_inはSessionHelperに記述してある
       sign_in user
-      redirect_to user
+      # redirect_to user
+      redirect_back_or user
     else
       # flash[:error] = 'Invalid email/password combination' # 誤りあり!
       flash.now[:error] = 'Invalid email/password combination'

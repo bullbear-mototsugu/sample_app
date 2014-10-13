@@ -1,5 +1,15 @@
 class UsersController < ApplicationController
 
+  # edit, updateがログインメソッド
+  before_action :signed_in_user, only: [:edit, :update, :index, :destroy]
+  before_action :correct_user,   only: [:edit, :update]
+  before_action :admin_user,     only: :destroy
+
+
+  def index
+    # @users = User.all
+    @users = User.paginate(page: params[:page])
+  end
 
   def new
     @user = User.new
@@ -25,8 +35,61 @@ class UsersController < ApplicationController
     end
   end
 
-  def user_params
-    # strong parameters機能を使って、POST可能なパラメータを許可
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  def edit
+    # correct_userをbefore_actionで行っているため、以下1行は不要
+    # @user = User.find(params[:id])
   end
+
+  def update
+    # correct_userをbefore_actionで行っているため、以下1行は不要
+    # @user = User.find(params[:id])
+
+    if @user.update_attributes(user_params)
+      # 更新に成功した場合を扱う。
+      flash[:success] = "Profile updated"
+      redirect_to @user
+    else
+      render 'edit'
+    end
+  end
+
+
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed."
+    redirect_to users_url
+  end
+
+
+  # 以下プライベートメソッド
+  private
+
+    def user_params
+      # strong parameters機能を使って、マスアサインメント脆弱性対策。POST可能なパラメータを許可。
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+
+    # Before actions
+
+    def signed_in_user
+      # session_helperのsigned_in?メソッド
+      # redirect_to signin_url, notice: "Please sign in." unless signed_in?
+
+      # ログインしてなければいったんセッションにアクセスしたいURLを保存してログイン画面へ遷移
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: "Please sign in."
+      end
+    end
+
+    # 更新対象のユーザはログイン中のユーザであるかのチェック
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_path) unless current_user?(@user)
+    end
+
+    # 管理者ユーザかどうかのチェック
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
+    end
 end
