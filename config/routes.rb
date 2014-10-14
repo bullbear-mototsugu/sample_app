@@ -1,10 +1,25 @@
 Rails.application.routes.draw do
   # get 'users/new'
-  resources :users
+  # resources :users
+
+
+  resources :users do
+
+    # get /users/1/following
+    # get /users/1/followers
+    # のルーティングを作っている
+    member do
+      get :following, :followers
+    end
+
+    collection do
+      get :tigers
+    end
+  end
 
   resources :sessions, only: [:new, :create, :destroy]
-
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   # get 'static_pages/home'
   root 'static_pages#home'
